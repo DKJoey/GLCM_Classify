@@ -1,12 +1,11 @@
 import numpy as np
-from sklearn.metrics import accuracy_score
 
-classifier = ['_rbf', '_knn', '_LinearSVC', '_LR', '_poly']
+classifier = ['rbf', 'knn', 'LinearSVC', 'LR', 'poly']
 c_index = classifier[0]
 # c_index : 0 1 2 3 4
 result = {}
 
-dic = np.load('results/dict'+c_index+'.npy', allow_pickle=True)
+dic = np.load('results/dict_' + c_index + '.npy', allow_pickle=True)
 
 dic = dic.item()
 for key in dic.keys():

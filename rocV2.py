@@ -1,6 +1,6 @@
+import matplotlib.pyplot  as plt
 import numpy as np
 from sklearn.metrics import roc_curve, roc_auc_score
-import matplotlib.pyplot  as plt
 
 
 def calc_auc(y_pred_proba, labels, exp_run_folder, classifier, fold):
@@ -22,11 +22,15 @@ def calc_auc(y_pred_proba, labels, exp_run_folder, classifier, fold):
     return auc
 
 
+classifier = ['rbf', 'knn', 'LinearSVC', 'LR', 'poly']
+
 result1 = np.load('results/npy/result_rbf.npy')
 result2 = np.load('results/npy/result_knn.npy')
 result3 = np.load('results/npy/result_LinearSVC.npy')
 result4 = np.load('results/npy/result_LR.npy')
 result5 = np.load('results/npy/result_poly.npy')
+
+result = [result1, result2, result3, result4, result5]
 
 
 def result_auc(result):
@@ -41,22 +45,22 @@ def result_auc(result):
     fpr, tpr, thresholds = roc_curve(label, prob)
     auc = roc_auc_score(label, prob)
 
-    return fpr, tpr, auc
+    return prob, fpr, tpr, auc
 
 
-fpr, tpr, auc = result_auc(result1)
+prob1, fpr, tpr, auc = result_auc(result1)
 plt.plot(fpr, tpr, label='rbf: AUC={0:0.2f}'.format(auc))
 
-fpr, tpr, auc = result_auc(result2)
+prob2, fpr, tpr, auc = result_auc(result2)
 plt.plot(fpr, tpr, label='knn: AUC={0:0.2f}'.format(auc))
 
-fpr, tpr, auc = result_auc(result3)
+prob3, fpr, tpr, auc = result_auc(result3)
 plt.plot(fpr, tpr, label='LinearSVC: AUC={0:0.2f}'.format(auc))
 
-fpr, tpr, auc = result_auc(result4)
+prob4, fpr, tpr, auc = result_auc(result4)
 plt.plot(fpr, tpr, label='LR: AUC={0:0.2f}'.format(auc))
 
-fpr, tpr, auc = result_auc(result5)
+prob5, fpr, tpr, auc = result_auc(result5)
 plt.plot(fpr, tpr, label='poly: AUC={0:0.2f}'.format(auc))
 
 plt.xlabel('1-Specificity')
@@ -75,28 +79,33 @@ y_data3 = [0] * 10  # meta male
 y_data4 = [0] * 10  # gbm male
 y_data5 = [0] * 10  # meta female
 y_data6 = [0] * 10  # gbm female
-for i in range(88):
-    if i < 45:
-        y_data[int(prob[i] * 10)] += 1
-        if result[i, 1] == '1':
-            y_data3[int(prob[i] * 10)] += 1
-        else:
-            y_data5[int(prob[i] * 10)] += 1
-    else:
-        y_data2[int(prob[i] * 10)] += 1
-        if result[i, 1] == '1':
-            y_data4[int(prob[i] * 10)] += 1
-        else:
-            y_data6[int(prob[i] * 10)] += 1
 
-plt.plot(x_data, y_data, color='red', label='meta')
-plt.plot(x_data, y_data3, color='brown', label='meta male')
-plt.plot(x_data, y_data5, color='coral', label='meta female')
+prob = [prob1, prob2, prob3, prob4, prob5]
 
-plt.plot(x_data, y_data2, color='blue', label='gbm')
-plt.plot(x_data, y_data4, color='navy', label='gbm male')
-plt.plot(x_data, y_data6, color='cyan', label='gbm female')
-plt.legend(loc='best')
-plt.xlabel('Prob')
-plt.ylabel('Cases')
-plt.show()
+for p in range(5):
+    for i in range(88):
+        if i < 45:
+            y_data[int(prob[p][i] * 10) if int(prob[p][i] * 10) < 10 else 9] += 1
+            if result[p][i, 1] == '1':
+                y_data3[int(prob[p][i] * 10) if int(prob[p][i] * 10) < 10 else 9] += 1
+            else:
+                y_data5[int(prob[p][i] * 10)] += 1
+        else:
+            y_data2[int(prob[p][i] * 10) if int(prob[p][i] * 10) < 10 else 9] += 1
+            if result[p][i, 1] == '1':
+                y_data4[int(prob[p][i] * 10) if int(prob[p][i] * 10) < 10 else 9] += 1
+            else:
+                y_data6[int(prob[p][i] * 10) if int(prob[p][i] * 10) < 10 else 9] += 1
+
+    plt.plot(x_data, y_data, color='red', label='meta')
+    plt.plot(x_data, y_data3, color='brown', label='meta male')
+    plt.plot(x_data, y_data5, color='coral', label='meta female')
+
+    plt.plot(x_data, y_data2, color='blue', label='gbm')
+    plt.plot(x_data, y_data4, color='navy', label='gbm male')
+    plt.plot(x_data, y_data6, color='cyan', label='gbm female')
+    plt.title(classifier[p])
+    plt.legend(loc='best')
+    plt.xlabel('Prob')
+    plt.ylabel('Cases')
+    plt.show()
