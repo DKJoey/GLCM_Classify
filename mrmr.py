@@ -24,8 +24,10 @@ def my_mRMR(X, y, n):
     frame = pd.DataFrame(data, columns=c)
     
     result = pymrmr.mRMR(frame, "MIQ", n)
-    # result = pymrmr.mRMR(frame, "MID", n)
+    # MAX/MIN
 
+    # result = pymrmr.mRMR(frame, "MID", n)
+    # MAX-MIN
     ans = []
     for r in result:
         r = int(r[1:])

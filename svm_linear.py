@@ -87,4 +87,4 @@ print('%.3f +- %.3f' % (runtimemean, runtimestd))
 
 # for key in name_results.keys():
 #     name_results[key] = mean(name_results[key])
-np.save('dict_LinearSVC.npy', name_results)
+np.save('results/dict_LinearSVC.npy', name_results)

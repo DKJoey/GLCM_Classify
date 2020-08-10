@@ -22,19 +22,43 @@ def calc_auc(y_pred_proba, labels, exp_run_folder, classifier, fold):
     return auc
 
 
-result = np.load('result.npy')
+result1 = np.load('results/npy/result_rbf.npy')
+result2 = np.load('results/npy/result_knn.npy')
+result3 = np.load('results/npy/result_LinearSVC.npy')
+result4 = np.load('results/npy/result_LR.npy')
+result5 = np.load('results/npy/result_poly.npy')
 
-label1 = np.zeros((45, 1))
-label2 = np.ones((43, 1))
-label = np.vstack((label1, label2))
 
-prob = np.zeros((88, 1))
-for i in range(88):
-    prob[i] = float(result[i, 3])
+def result_auc(result):
+    label1 = np.zeros((45, 1))
+    label2 = np.ones((43, 1))
+    label = np.vstack((label1, label2))
 
-fpr, tpr, thresholds = roc_curve(label, prob)
-auc = roc_auc_score(label, prob)
-plt.plot(fpr, tpr, label='ROC curve: AUC={0:0.2f}'.format(auc))
+    prob = np.zeros((88, 1))
+    for i in range(88):
+        prob[i] = float(result[i, 3])
+
+    fpr, tpr, thresholds = roc_curve(label, prob)
+    auc = roc_auc_score(label, prob)
+
+    return fpr, tpr, auc
+
+
+fpr, tpr, auc = result_auc(result1)
+plt.plot(fpr, tpr, label='rbf: AUC={0:0.2f}'.format(auc))
+
+fpr, tpr, auc = result_auc(result2)
+plt.plot(fpr, tpr, label='knn: AUC={0:0.2f}'.format(auc))
+
+fpr, tpr, auc = result_auc(result3)
+plt.plot(fpr, tpr, label='LinearSVC: AUC={0:0.2f}'.format(auc))
+
+fpr, tpr, auc = result_auc(result4)
+plt.plot(fpr, tpr, label='LR: AUC={0:0.2f}'.format(auc))
+
+fpr, tpr, auc = result_auc(result5)
+plt.plot(fpr, tpr, label='poly: AUC={0:0.2f}'.format(auc))
+
 plt.xlabel('1-Specificity')
 plt.ylabel('Sensitivity')
 plt.ylim([0.0, 1.05])

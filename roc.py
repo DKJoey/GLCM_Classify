@@ -105,6 +105,7 @@ print(accuracy_score(y_test, y_pred))
 
 display = plot_roc_curve(classifier, X_test, y_test, name='transverse')
 ax = plt.gca()
+
 display1 = plot_roc_curve(classifierA, XA_test, y_test, ax=ax, alpha=0.8, name='DWI_transverse')
 display2 = plot_roc_curve(classifierB, XB_test, y_test, ax=ax, alpha=0.8, name='T1+c_transverse')
 # display3 = plot_roc_curve(classifier, X_train, y_train,ax= ax, alpha= 0.8, name= 'train')

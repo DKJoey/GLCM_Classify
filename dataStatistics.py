@@ -43,10 +43,14 @@ for i in range(len(meta)):
 
 if __name__ == '__main__':
     N = 6
-    # men_means = gbm_male_count
-    # women_means = gbm_female_count
-    men_means = meta_male_count
-    women_means = meta_female_count
+
+    # gbm
+    men_means = gbm_male_count
+    women_means = gbm_female_count
+
+    # meta
+    # men_means = meta_male_count
+    # women_means = meta_female_count
 
     labels = ['20-29', '30-39', '40-49', '50-59', '60-69', '70-79']
 
@@ -67,6 +71,7 @@ if __name__ == '__main__':
     ax.set_xticklabels(labels)
     ax.legend()
 
+
     def autolabel(rects):
         """Attach a text label above each bar in *rects*, displaying its height."""
         for rect in rects:
@@ -76,6 +81,7 @@ if __name__ == '__main__':
                         xytext=(0, 3),  # 3 points vertical offset
                         textcoords="offset points",
                         ha='center', va='bottom')
+
 
     autolabel(rects1)
     autolabel(rects2)

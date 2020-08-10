@@ -1,8 +1,13 @@
 import numpy as np
 from sklearn.metrics import accuracy_score
 
+classifier = ['_rbf', '_knn', '_LinearSVC', '_LR', '_poly']
+c_index = classifier[0]
+# c_index : 0 1 2 3 4
 result = {}
-dic = np.load('dict.npy', allow_pickle=True)
+
+dic = np.load('results/dict'+c_index+'.npy', allow_pickle=True)
+
 dic = dic.item()
 for key in dic.keys():
     # print(np.mean(dic[key]))
@@ -19,8 +24,8 @@ for key in result.keys():
         if sexage[i, 0] == key:
             sexage[i, 3] = result[key]
 
-# np.savetxt('result.csv',sexage, fmt = '%s')
-# np.save('result.npy',sexage)
+np.savetxt('results/csv/result'+c_index+'.csv', sexage, fmt='%s')
+np.save('results/npy/result'+c_index+'.npy', sexage)
 
 # # male_accuracy
 # male_label=[]
@@ -39,17 +44,17 @@ for key in result.keys():
 # male_accuracy= accuracy_score(male_label,male_prob)
 
 # age_accuracy
-age_label = []
-age_prob = []
-for i in range(88):
-    if int(sexage[i, 2]) // 10 == 7:
-        # 2 3 4 5 6 7
-        if i < 45:
-            age_label.append(0)
-        else:
-            age_label.append(1)
-        if float(sexage[i, 3]) < 0.5:
-            age_prob.append(0)
-        else:
-            age_prob.append(1)
-age_accuracy = accuracy_score(age_label, age_prob)
+# age_label = []
+# age_prob = []
+# for i in range(88):
+#     if int(sexage[i, 2]) // 10 == 7:
+#         # 2 3 4 5 6 7
+#         if i < 45:
+#             age_label.append(0)
+#         else:
+#             age_label.append(1)
+#         if float(sexage[i, 3]) < 0.5:
+#             age_prob.append(0)
+#         else:
+#             age_prob.append(1)
+# age_accuracy = accuracy_score(age_label, age_prob)
