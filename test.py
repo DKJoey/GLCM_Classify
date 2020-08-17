@@ -1,11 +1,14 @@
 import numpy as np
 
 classifier = ['rbf', 'knn', 'LinearSVC', 'LR', 'poly']
-c_index = classifier[0]
+c_index = classifier[3]
 # c_index : 0 1 2 3 4
 result = {}
 
-dic = np.load('results/dict_' + c_index + '.npy', allow_pickle=True)
+# result_dir = 'results'
+result_dir = 'whole_results'
+
+dic = np.load(result_dir + '/dict_' + c_index + '.npy', allow_pickle=True)
 
 dic = dic.item()
 for key in dic.keys():
@@ -23,8 +26,8 @@ for key in result.keys():
         if sexage[i, 0] == key:
             sexage[i, 3] = result[key]
 
-np.savetxt('results/csv/result'+c_index+'.csv', sexage, fmt='%s')
-np.save('results/npy/result'+c_index+'.npy', sexage)
+np.savetxt(result_dir + '/csv/result_' + c_index + '.csv', sexage, fmt='%s')
+np.save(result_dir + '/npy/result_' + c_index + '.npy', sexage)
 
 # # male_accuracy
 # male_label=[]

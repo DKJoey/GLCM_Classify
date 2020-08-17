@@ -2,14 +2,12 @@ import time
 
 import numpy as np
 from sklearn import preprocessing
-from sklearn.decomposition import PCA
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.svm import SVC
 
 from load_feature import load_feature
 from mrmr import my_mRMR
-
 
 X, y, namesex = load_feature()
 
@@ -115,4 +113,4 @@ print('%.3f +- %.3f' % (runtimemean, runtimestd))
 
 # for key in name_results.keys():
 #     name_results[key] = mean(name_results[key])
-np.save('results/dict_poly.npy', name_results)
+np.save('whole_results/dict_poly.npy', name_results)

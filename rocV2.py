@@ -22,13 +22,16 @@ def calc_auc(y_pred_proba, labels, exp_run_folder, classifier, fold):
     return auc
 
 
+# result_dir = 'results'
+result_dir = 'whole_results'
+
 classifier = ['rbf', 'knn', 'LinearSVC', 'LR', 'poly']
 
-result1 = np.load('results/npy/result_rbf.npy')
-result2 = np.load('results/npy/result_knn.npy')
-result3 = np.load('results/npy/result_LinearSVC.npy')
-result4 = np.load('results/npy/result_LR.npy')
-result5 = np.load('results/npy/result_poly.npy')
+result1 = np.load(result_dir + '/npy/result_rbf.npy')
+result2 = np.load(result_dir + '/npy/result_knn.npy')
+result3 = np.load(result_dir + '/npy/result_LinearSVC.npy')
+result4 = np.load(result_dir + '/npy/result_LR.npy')
+result5 = np.load(result_dir + '/npy/result_poly.npy')
 
 result = [result1, result2, result3, result4, result5]
 
@@ -89,7 +92,7 @@ for p in range(5):
             if result[p][i, 1] == '1':
                 y_data3[int(prob[p][i] * 10) if int(prob[p][i] * 10) < 10 else 9] += 1
             else:
-                y_data5[int(prob[p][i] * 10)] += 1
+                y_data5[int(prob[p][i] * 10) if int(prob[p][i] * 10) < 10 else 9] += 1
         else:
             y_data2[int(prob[p][i] * 10) if int(prob[p][i] * 10) < 10 else 9] += 1
             if result[p][i, 1] == '1':
