@@ -3,56 +3,31 @@ import numpy as np
 from scipy import stats
 
 # feature statistic analysis
-from sklearn import preprocessing
 
-X = np.load('feature/v5nc/X_DWI_transverse.npy')
-y = np.load('feature/v5/y.npy')
+mod = ['DWI', 'T1+c', 'T2', 'T2-FLAIR']
+slice_oris = ['transverse', 'sagittal', 'coronal']
 
-X = preprocessing.scale(X)
-X_m = np.ndarray((88, X.shape[1] // 4))
+for index in range(4):
+    for slice_ori in range(3):
+        X = np.load('feature/v5/X_' + mod[index] + '_' + slice_oris[slice_ori] + '.npy')
 
-# average 4 angles to 1 value
-for i in range(88):
-    # for j  [0, 4, 8, 12]:
-    for j in range(0, X.shape[1], 4):
-        X_m[i, j // 4] = np.mean(X[i, j:j + 3])
+        s = []
+        p = []
+        for i in range(X.shape[1]):
+            # group a: meta
+            a = X[0:45, i]
+            # group b : gbm
+            b = X[45:88, i]
 
-print(X_m)
+            # plot data feature distribution between groups
+            plt.boxplot([a, b])
+            plt.title(i)
+            plt.savefig('plot/v5/' + mod[index] + '_' + slice_oris[slice_ori] + '_' + str(i) + '.jpg')
+            plt.show()
 
-result = np.ndarray((2, X_m.shape[1]*2))
-# group a : line 0
-# group b : line 1
+            u, pvalue = stats.mannwhitneyu(a, b, alternative='two-sided')
 
-# for i in [0, 2, 4, 6]:
-for i in range(0, result.shape[1], 2):
-
-    result[0, i] = np.mean(X_m[0:45, i // 2])
-    result[0, i + 1] = np.var(X_m[0:45, i // 2])
-
-    result[1, i] = np.mean(X_m[45:88, i // 2])
-    result[1, i + 1] = np.var(X_m[45:88, i // 2])
-
-print(result)
-
-s = []
-p = []
-
-for i in range(X_m.shape[1]):
-    # group a: meta
-    a = X_m[0:45, i]
-    # group b : gbm
-    b = X_m[45:88, i]
-
-    # plot data feature distribution between groups
-    plt.boxplot([a, b])
-
-    # plt.savefig('plot/v3/DWI_transverse_' + str(i) + '.jpg')
-    plt.show()
-
-    # statis, pvalue = stats.mannwhitneyu(a, b)
-    # varis = stats.levene(a, b)
-    # v.append(varis)
-
-    statis, pvalue = stats.ttest_ind(a, b, equal_var=False)
-    s.append(statis)
-    p.append(pvalue)
+            # statis, pvalue = stats.ttest_ind(a, b, equal_var=False)
+            s.append(u)
+            p.append(pvalue)
+        np.savetxt('plot/v5/' + mod[index] + '_' + slice_oris[slice_ori] + '.txt', (s, p))
