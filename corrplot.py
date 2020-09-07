@@ -94,7 +94,7 @@ if __name__ == "__main__":
     sexage = sexage[:, 1:]
     sexage = sexage.astype(np.int)
 
-    X = np.hstack((X1[:, :4], X4[:, :4], X7[:, :4], X10[:, :4]))
+    # X = np.hstack((X1,X2,X3,X4,X))
     # X = X3
     # XB = X4
 
@@ -104,8 +104,8 @@ if __name__ == "__main__":
     y = np.load('feature/v5/y.npy')
     y = y.reshape((88, 1))
 
-    data = np.hstack((y, X))
-    # data = np.hstack((y, sexage))
+    # data = np.hstack((y, X))
+    data = np.hstack((y, sexage))
     # data=X
     print(data.shape)
 
@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
     f, ax = plt.subplots()
     sns.heatmap(corrmat, square=True, cmap="rainbow", vmax=1, annot=True, xticklabels=pdata.columns,
-                yticklabels=pdata.columns)
+                yticklabels=False)
     plt.show()
 
     # k = 5

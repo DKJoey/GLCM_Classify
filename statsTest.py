@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from scipy import stats
 
 # feature statistic analysis
@@ -9,7 +10,7 @@ slice_oris = ['transverse', 'sagittal', 'coronal']
 
 for index in range(4):
     for slice_ori in range(3):
-        X = np.load('feature/v5/X_' + mod[index] + '_' + slice_oris[slice_ori] + '.npy')
+        X = np.load('feature/v5whole/X_' + mod[index] + '_' + slice_oris[slice_ori] + '.npy')
 
         s = []
         p = []
@@ -18,11 +19,12 @@ for index in range(4):
             a = X[0:45, i]
             # group b : gbm
             b = X[45:88, i]
-
             # plot data feature distribution between groups
-            plt.boxplot([a, b])
-            plt.title(i)
-            plt.savefig('plot/v5/' + mod[index] + '_' + slice_oris[slice_ori] + '_' + str(i) + '.jpg')
+            data_a = pd.DataFrame(a, columns=['meta'])
+            data_b = pd.DataFrame(b, columns=['gbm'])
+            plt.boxplot([data_a, data_b])
+
+            plt.savefig('plot/v5whole/' + mod[index] + '_' + slice_oris[slice_ori] + '_' + str(i) + '.jpg')
             plt.show()
 
             u, pvalue = stats.mannwhitneyu(a, b, alternative='two-sided')
@@ -30,4 +32,4 @@ for index in range(4):
             # statis, pvalue = stats.ttest_ind(a, b, equal_var=False)
             s.append(u)
             p.append(pvalue)
-        np.savetxt('plot/v5/' + mod[index] + '_' + slice_oris[slice_ori] + '.txt', (s, p))
+        np.savetxt('plot/v5whole/' + mod[index] + '_' + slice_oris[slice_ori] + '.txt', (s, p))

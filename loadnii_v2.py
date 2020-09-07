@@ -13,11 +13,11 @@ start = time.time()
 meta = np.ndarray((1, 16))
 gbm = np.ndarray((1, 16))
 
-# inputdir1 = 'E:\data\ShandongHospitalBrain_preprocess_9\Metastases_contour'
-# inputdir2 = 'E:\data\ShandongHospitalBrain_preprocess_9\GBM_contour'
+inputdir1 = '/home/cjy/data/data_final/meta_tumor'
+inputdir2 = '/home/cjy/data/data_final/GBM_tumor'
 
-inputdir1 = '/home/cjy/data/ShandongHospitalBrain_preprocess_11/Brain_metastases_Solitary_Signa_3.0T'
-inputdir2 = '/home/cjy/data/ShandongHospitalBrain_preprocess_11/GBM_Signa_3.0T'
+# inputdir1 = '/home/cjy/data/data_final/meta'
+# inputdir2 = '/home/cjy/data/data_final/GBM'
 
 patient_name_list1 = os.listdir(inputdir1)
 patient_name_list1 = sorted(patient_name_list1)
@@ -25,8 +25,8 @@ patient_name_list2 = os.listdir(inputdir2)
 patient_name_list2 = sorted(patient_name_list2)
 
 index = 3
-# DWI: 0   T1: 1   T2: 2    T2-FLAIR: 3    Label: 4   mask: 5
-slice_ori = 2
+# DWI: 0   T1: 1   T2: 2    T2-FLAIR: 3
+slice_ori = 0
 # transverse : 0   sagittal: 1   coronal: 2
 
 for patient_name in patient_name_list1:
@@ -124,13 +124,18 @@ gbm_label = np.ones((gbm.shape[0], 1))
 X = np.vstack((meta, gbm))
 y = np.vstack((meta_label, gbm_label))
 
-# DWI: 0   T1: 1   T2: 2    T2-FLAIR: 3    Label: 4   mask: 5
+# DWI: 0   T1: 1   T2: 2    T2-FLAIR: 3
 # transverse : 0   sagittal: 1   coronal: 2
+
 mod = ['DWI', 'T1+c', 'T2', 'T2-FLAIR']
+# mod = ['label', 'DWI', 'T1+c', 'T2', 'T2-FLAIR']
 slice_oris = ['transverse', 'sagittal', 'coronal']
 
-np.save('feature/v5whole/X_' + mod[index] + '_' + slice_oris[slice_ori] + '.npy', X)
-np.save('feature/v5whole/y.npy', y)
+print(mod[index])
+print(slice_oris[slice_ori])
+
+np.save('feature/v5/X_' + mod[index] + '_' + slice_oris[slice_ori] + '.npy', X)
+np.save('feature/v5/y.npy', y)
 
 end = time.time()
 

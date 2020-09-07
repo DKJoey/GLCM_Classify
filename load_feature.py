@@ -24,13 +24,13 @@ def load_feature():
     sexage = sexage[:, 1:]
     sex = sexage[:, 0]
     sex = sex.reshape((88, 1))
-    # sexage = sexage.astype(np.int)
-    # sexage[:, 1] = sexage[:, 1] // 10
+    sexage = sexage.astype(np.int)
+    sexage[:, 1] = sexage[:, 1] // 10
 
     namesex = np.hstack((name, sex))
 
-    X = np.hstack((X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12))
-    y = np.load('feature/v5whole/y.npy')
+    X = np.hstack((X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, sexage))
+    y = np.load('feature/v5/y.npy')
     y = y.ravel()
 
     return X, y, namesex

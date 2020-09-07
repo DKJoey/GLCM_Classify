@@ -2,16 +2,16 @@ import time
 
 import numpy as np
 from sklearn import preprocessing
+from sklearn.decomposition import PCA
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.svm import SVC
 
 from load_feature import load_feature
-from mrmr import my_mRMR
 
 X, y, namesex = load_feature()
 
-results = np.zeros((1000, 4))
+results = np.zeros((1000, 3))
 
 name_results = {}
 
@@ -20,18 +20,19 @@ name_results = {}
 X = preprocessing.scale(X)
 
 # pca降维
-# pca = PCA(n_components=20)
-# reduced_X = pca.fit_transform(X)
+pca = PCA(n_components=20)
+reduced_X = pca.fit_transform(X)
 
 # mrmr降维
-reduced_X = my_mRMR(X, y, 20)
+# reduced_X = my_mRMR(X, y, 20)
+# reduced_X = X
 
 for i in range(1000):
     print(i)
     start = time.time()
 
     # 数据集划分
-    X_train, X_test, y_train, y_test, _, namesex_test = train_test_split(reduced_X, y, namesex, test_size=1 / 5,
+    X_train, X_test, y_train, y_test, _, namesex_test = train_test_split(reduced_X, y, namesex, test_size=1 / 3,
                                                                          stratify=y)
     # grid search
     # y_train = y_train[:, 2]
@@ -79,19 +80,19 @@ for i in range(1000):
     end = time.time()
     runtime = end - start
 
-    results[i, 0] = i
-    results[i, 1] = f1
-    results[i, 2] = acc
-    results[i, 3] = runtime
+    # results[i, 0] = i
+    results[i, 0] = f1
+    results[i, 1] = acc
+    results[i, 2] = runtime
 
 # print(results[:,1])
 
-f1mean = np.mean(results[:, 1])
-f1std = np.std(results[:, 1])
-accmean = np.mean(results[:, 2])
-accstd = np.std(results[:, 2])
-runtimemean = np.mean(results[:, 3])
-runtimestd = np.std(results[:, 3])
+f1mean = np.mean(results[:, 0])
+f1std = np.std(results[:, 0])
+accmean = np.mean(results[:, 1])
+accstd = np.std(results[:, 1])
+runtimemean = np.mean(results[:, 2])
+runtimestd = np.std(results[:, 2])
 
 print('%.3f +- %.3f' % (accmean, accstd))
 print('%.3f +- %.3f' % (f1mean, f1std))
@@ -99,4 +100,18 @@ print('%.3f +- %.3f' % (runtimemean, runtimestd))
 
 # for key in name_results.keys():
 #     name_results[key] = mean(name_results[key])
-np.save('whole_results/dict.npy', name_results)
+
+# np.save('results/dict.npy', name_results)
+
+# s = 0
+# p = 0
+# f = 0
+# for i in range(1000):
+#     if results[i, 0] > 0.75:
+#         p += results[i, 0]
+#         f += results[i, 1]
+#         s += 1
+# p /= s
+# f /= s
+# print(p)
+# print(f)
