@@ -13,11 +13,10 @@ start = time.time()
 meta = np.ndarray((1, 16))
 gbm = np.ndarray((1, 16))
 
-inputdir1 = '/home/cjy/data/data_final/meta_tumor'
-inputdir2 = '/home/cjy/data/data_final/GBM_tumor'
+indir = '/home/cjy/data/comp_pre/gc_match_to_first/tumor'
 
-# inputdir1 = '/home/cjy/data/data_final/meta'
-# inputdir2 = '/home/cjy/data/data_final/GBM'
+inputdir1 = os.path.join(indir, 'meta')
+inputdir2 = os.path.join(indir, 'GBM')
 
 patient_name_list1 = os.listdir(inputdir1)
 patient_name_list1 = sorted(patient_name_list1)
@@ -26,7 +25,7 @@ patient_name_list2 = sorted(patient_name_list2)
 
 index = 3
 # DWI: 0   T1: 1   T2: 2    T2-FLAIR: 3
-slice_ori = 0
+slice_ori = 2
 # transverse : 0   sagittal: 1   coronal: 2
 
 for patient_name in patient_name_list1:
@@ -42,9 +41,11 @@ for patient_name in patient_name_list1:
     sitkNp = sitk.GetArrayFromImage(sitkImage)
     # 裁剪到一样大小
     sitkNp = crop(sitkNp, 123, 220, 220)
+
     sitkNp = grayCompression(sitkNp)
     sitkNp_int = sitkNp.astype(np.uint8)
 
+    # sitkNp_int=sitkNp
     # ----------test 2D glcm
     # feature dummyhead
     feature = np.zeros((1, 16))
@@ -56,7 +57,7 @@ for patient_name in patient_name_list1:
         elif slice_ori == 2:
             image = sitkNp_int[:, :, i]
         else:
-            print("slice_ori error ")
+            print("slice_ori error")
             break
         # print(image)
         if (image == np.zeros(image.shape)).all():
@@ -86,8 +87,12 @@ for patient_name in patient_name_list2:
     sitkImage = sitk.ReadImage(inputdir2 + '/' + patient_name + '/' + file)
     sitkNp = sitk.GetArrayFromImage(sitkImage)
     sitkNp = crop(sitkNp, 123, 220, 220)
+
+    #
     sitkNp = grayCompression(sitkNp)
     sitkNp_int = sitkNp.astype(np.uint8)
+
+    # sitkNp_int = sitkNp
     # ----------test 2D glcm
     # feature dummyhead
     feature = np.zeros((1, 16))
@@ -134,8 +139,10 @@ slice_oris = ['transverse', 'sagittal', 'coronal']
 print(mod[index])
 print(slice_oris[slice_ori])
 
-np.save('feature/v5/X_' + mod[index] + '_' + slice_oris[slice_ori] + '.npy', X)
-np.save('feature/v5/y.npy', y)
+# np.save('/home/cjy/data/comp_pre/raw/tumor/feature/' + mod[index] + '_' + slice_oris[slice_ori] + '.npy', X)
+np.save(os.path.join(indir, 'feature', mod[index] + '_' + slice_oris[slice_ori] + '.npy'), X)
+# np.save('/home/cjy/data/comp_pre/raw/tumor/feature/y.npy', y)
+np.save(os.path.join(indir, 'feature', 'y.npy'), y)
 
 end = time.time()
 

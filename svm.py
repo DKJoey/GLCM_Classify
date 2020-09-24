@@ -7,11 +7,11 @@ from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.svm import SVC
 
-from load_feature import load_feature
+from load_feature import new_load_feature
 
-X, y, namesex = load_feature()
+X, y = new_load_feature()
 
-results = np.zeros((1000, 3))
+results = np.zeros((1000, 2))
 
 name_results = {}
 
@@ -32,8 +32,8 @@ for i in range(1000):
     start = time.time()
 
     # 数据集划分
-    X_train, X_test, y_train, y_test, _, namesex_test = train_test_split(reduced_X, y, namesex, test_size=1 / 3,
-                                                                         stratify=y)
+    X_train, X_test, y_train, y_test = train_test_split(reduced_X, y, test_size=1 / 5,
+                                                        stratify=y)
     # grid search
     # y_train = y_train[:, 2]
     # y_test = y_test[:, 2]
@@ -44,7 +44,7 @@ for i in range(1000):
     for g in gamma_range:
         classifier = SVC(kernel="rbf", probability=True, gamma=g, tol=1e-3)
         classifier.fit(X_train, y_train)
-        scores = cross_val_score(classifier, X_train, y_train, cv=5, scoring='f1')
+        scores = cross_val_score(classifier, X_train, y_train, cv=10, scoring='f1')
         cv_scores.append(scores.mean())
 
     # 通过图像选择最好的参数
@@ -68,10 +68,10 @@ for i in range(1000):
     y_pred_proba = classifier.predict_proba(X_test)
     # params = classifier.get_params()
 
-    for j in range(18):
-        if namesex_test[j, 0] not in name_results.keys():
-            name_results[namesex_test[j, 0]] = []
-        name_results[namesex_test[j, 0]].append(y_pred_proba[j, 1])
+    # for j in range(18):
+    #     if namesex_test[j, 0] not in name_results.keys():
+    #         name_results[namesex_test[j, 0]] = []
+    #     name_results[namesex_test[j, 0]].append(y_pred_proba[j, 1])
 
     # 计算f1、accuracy
     f1 = f1_score(y_test, y_pred)
@@ -83,7 +83,7 @@ for i in range(1000):
     # results[i, 0] = i
     results[i, 0] = f1
     results[i, 1] = acc
-    results[i, 2] = runtime
+    # results[i, 2] = runtime
 
 # print(results[:,1])
 
@@ -91,17 +91,25 @@ f1mean = np.mean(results[:, 0])
 f1std = np.std(results[:, 0])
 accmean = np.mean(results[:, 1])
 accstd = np.std(results[:, 1])
-runtimemean = np.mean(results[:, 2])
-runtimestd = np.std(results[:, 2])
+# runtimemean = np.mean(results[:, 2])
+# runtimestd = np.std(results[:, 2])
+
+
+# np.savetxt('results.csv', results)
 
 print('%.3f +- %.3f' % (accmean, accstd))
 print('%.3f +- %.3f' % (f1mean, f1std))
-print('%.3f +- %.3f' % (runtimemean, runtimestd))
+# print('%.3f +- %.3f' % (runtimemean, runtimestd))
 
 # for key in name_results.keys():
 #     name_results[key] = mean(name_results[key])
 
 # np.save('results/dict.npy', name_results)
+
+# results = list(results)
+# results = sorted(results, key=lambda x: x[0])
+# results = np.asarray(results)
+# results = results[300:, :]
 
 # s = 0
 # p = 0
@@ -115,3 +123,5 @@ print('%.3f +- %.3f' % (runtimemean, runtimestd))
 # f /= s
 # print(p)
 # print(f)
+
+# np.savetxt('svm.csv',results)

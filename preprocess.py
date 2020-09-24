@@ -1,6 +1,7 @@
 import numpy as np
 import skimage.morphology as sm
 
+
 # useful function in preprocess
 
 
@@ -28,7 +29,7 @@ def autoNorm(data):
 def grayCompression(mat):
     maxmat = np.max(mat)
     minmat = np.min(mat)
-    mat = 255 * (mat-minmat) / (maxmat-minmat)
+    mat = 255 * (mat - minmat) / (maxmat - minmat)
     return mat
 
 
@@ -41,15 +42,4 @@ def contour(image):
 
 
 if __name__ == '__main__':
-    image = np.arange(27)
-    # print(image)
-    # image = image.reshape(3, 3, 3)
-    # print(image)
-    # print(crop(image, 3, 3, 3))
-    # mat = np.array([[[-1, 1], [2, 3]], [[4, 5], [6, 7]]], dtype=float)
-    # mat = np.random.random((2,2,2))
-    # mat1 = grayCompression(mat)
-    # print(mat1)
-    # mat2 = mat1.astype(np.uint8)
-
-
+    pass
