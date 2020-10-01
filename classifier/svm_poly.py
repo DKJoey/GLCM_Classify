@@ -2,14 +2,15 @@ import time
 
 import numpy as np
 from sklearn import preprocessing
-from sklearn.decomposition import PCA
 from sklearn.metrics import f1_score, accuracy_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.svm import SVC
 
-from load_feature import load_feature
+from utils.load_feature import load_feature
+from utils.mrmr import my_mRMR
 
 X, y, namesex = load_feature()
+
 results = np.zeros((1000, 4))
 
 name_results = {}
@@ -28,13 +29,15 @@ name_results = {}
 # X, ranges, minval = autoNorm(X)
 X = preprocessing.scale(X)
 
-# # pca降维
-pca = PCA(n_components=20)
-reduced_X = pca.fit_transform(X)
+# pca降维
+# pca = PCA(n_components=20)
+# reduced_X = pca.fit_transform(X)
+
 
 # mrmr降维
-# reduced_X = my_mRMR(X, y, 20)
+reduced_X = my_mRMR(X, y, 20)
 
+degree = 4
 for i in range(1000):
     print(i)
 
@@ -47,7 +50,27 @@ for i in range(1000):
     # y_train = y_train[:, 2]
     # y_test = y_test[:, 2]
 
-    classifier = SVC(kernel='linear', probability=True)
+    gamma_range = [5e-4, 1e-3, 5e-3, 0.01, 0.05, 0.1, 0.5, 1, 5]
+
+    cv_scores = []
+    for g in gamma_range:
+        classifier = SVC(kernel="poly", probability=True, gamma=g, degree=degree)
+        classifier.fit(X_train, y_train)
+        scores = cross_val_score(classifier, X_train, y_train, cv=5, scoring='f1')
+        cv_scores.append(scores.mean())
+
+    # 通过图像选择最好的参数
+    # plt.plot(gamma_range, cv_scores, 'D-')
+    # plt.xlabel('gamma')
+    # plt.ylabel('f1')
+    # plt.semilogx()
+    # plt.show()
+
+    index = cv_scores.index(max(cv_scores))
+    g = gamma_range[index]
+
+    # test最好的参数
+    classifier = SVC(kernel="poly", probability=True, gamma=g, degree=degree)
     classifier.fit(X_train, y_train)
 
     # predict the result
@@ -89,4 +112,4 @@ print('%.3f +- %.3f' % (runtimemean, runtimestd))
 
 # for key in name_results.keys():
 #     name_results[key] = mean(name_results[key])
-np.save('whole_results/dict_LinearSVC.npy', name_results)
+np.save('../whole_results/dict_poly.npy', name_results)

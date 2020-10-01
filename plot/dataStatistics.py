@@ -4,11 +4,11 @@ import numpy as np
 # count data sex and age distribution
 
 
-gbm = np.load('gbm_sex_age.npy')
+gbm = np.load('../gbm_sex_age.npy')
 gbm = gbm[:, 1:]
 gbm = gbm.astype(np.int)
 
-meta = np.load('meta_sex_age.npy')
+meta = np.load('../meta_sex_age.npy')
 meta = meta[:, 1:]
 meta = meta.astype(np.int)
 

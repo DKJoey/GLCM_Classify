@@ -1,13 +1,13 @@
 import time
 
 import numpy as np
+import sklearn.neighbors as sknei
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
 from sklearn.metrics import f1_score, accuracy_score
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split
 
-from load_feature import new_load_feature
+from utils.load_feature import load_feature, new_load_feature
 
 X, y = new_load_feature()
 
@@ -25,10 +25,10 @@ reduced_X = pca.fit_transform(X)
 
 # mrmr降维
 # reduced_X = my_mRMR(X, y, 20)
-# reduced_X = X
 
 for i in range(1000):
     print(i)
+
     start = time.time()
 
     # 数据集划分
@@ -38,27 +38,7 @@ for i in range(1000):
     # y_train = y_train[:, 2]
     # y_test = y_test[:, 2]
 
-    gamma_range = [5e-4, 1e-3, 5e-3, 0.01, 0.05, 0.1, 0.5, 1, 5]
-
-    cv_scores = []
-    for g in gamma_range:
-        classifier = SVC(kernel="rbf", probability=True, gamma=g, tol=1e-3)
-        classifier.fit(X_train, y_train)
-        scores = cross_val_score(classifier, X_train, y_train, cv=10, scoring='f1')
-        cv_scores.append(scores.mean())
-
-    # 通过图像选择最好的参数
-    # plt.plot(gamma_range, cv_scores, 'D-')
-    # plt.xlabel('gamma')
-    # plt.ylabel('f1')
-    # plt.semilogx()
-    # plt.show()
-
-    index = cv_scores.index(max(cv_scores))
-    g = gamma_range[index]
-
-    # test最好的参数
-    classifier = SVC(kernel="rbf", probability=True, gamma=g)
+    classifier = sknei.KNeighborsClassifier()
     classifier.fit(X_train, y_train)
 
     # predict the result
@@ -83,7 +63,7 @@ for i in range(1000):
     # results[i, 0] = i
     results[i, 0] = f1
     results[i, 1] = acc
-    # results[i, 2] = runtime
+    # results[i, 3] = runtime
 
 # print(results[:,1])
 
@@ -91,11 +71,8 @@ f1mean = np.mean(results[:, 0])
 f1std = np.std(results[:, 0])
 accmean = np.mean(results[:, 1])
 accstd = np.std(results[:, 1])
-# runtimemean = np.mean(results[:, 2])
-# runtimestd = np.std(results[:, 2])
-
-
-# np.savetxt('results.csv', results)
+# runtimemean = np.mean(results[:, 3])
+# runtimestd = np.std(results[:, 3])
 
 print('%.3f +- %.3f' % (accmean, accstd))
 print('%.3f +- %.3f' % (f1mean, f1std))
@@ -103,25 +80,4 @@ print('%.3f +- %.3f' % (f1mean, f1std))
 
 # for key in name_results.keys():
 #     name_results[key] = mean(name_results[key])
-
-# np.save('results/dict.npy', name_results)
-
-# results = list(results)
-# results = sorted(results, key=lambda x: x[0])
-# results = np.asarray(results)
-# results = results[300:, :]
-
-# s = 0
-# p = 0
-# f = 0
-# for i in range(1000):
-#     if results[i, 0] > 0.75:
-#         p += results[i, 0]
-#         f += results[i, 1]
-#         s += 1
-# p /= s
-# f /= s
-# print(p)
-# print(f)
-
-# np.savetxt('svm.csv',results)
+# np.save('../whole_results/dict_knn.npy', name_results)

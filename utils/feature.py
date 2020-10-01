@@ -50,7 +50,7 @@ def tumor_proportion_feature():
         ans[i, :] = np.asarray(
             [tumor_volume, tumor_proportion, reinforce_proportion, nero_proportion, edema_proportion])
     print(ans)
-    np.save('feature/volume_feature/tumor_proportion_feature.npy', ans)
+    np.save('../feature/volume_feature/tumor_proportion_feature.npy', ans)
 
 
 if __name__ == '__main__':

@@ -14,7 +14,7 @@ def data_resample(_volume: sitk.Image, _new_spacing: tuple):
     _resampled = _resampleFilter.Execute(_volume,
                                          _new_size,
                                          sitk.Transform(),
-                                         sitk.tkLinear,
+                                         sitk.sitkLinear,
                                          _volume.GetOrigin(),
                                          _new_spacing,
                                          _volume.GetDirection(),
@@ -25,16 +25,16 @@ def data_resample(_volume: sitk.Image, _new_spacing: tuple):
 
 
 root_dir = '/home/cjy/data/comp_pre'
-tempdir = os.path.join(root_dir, 'greycompress', 'meta/5_GuHongYu')
+tempdir = os.path.join(root_dir, 'fix_label', 'GBM/1_ZhaoXingSan')
 tempfiles = sorted(os.listdir(tempdir))
 print(tempfiles)
 
-inputdir1 = os.path.join(root_dir, 'greycompress', 'meta')
-outputdir1 = os.path.join(root_dir, 'gc_match_to_first', 'meta')
+inputdir1 = os.path.join(root_dir, 'fix_label', 'meta')
+outputdir1 = os.path.join(root_dir, 'fl_match_to_first', 'meta')
 patient_name_list1 = sorted(os.listdir(inputdir1))
 
-inputdir2 = os.path.join(root_dir, 'greycompress', 'GBM')
-outputdir2 = os.path.join(root_dir, 'gc_match_to_first', 'GBM')
+inputdir2 = os.path.join(root_dir, 'fix_label', 'GBM')
+outputdir2 = os.path.join(root_dir, 'fl_match_to_first', 'GBM')
 patient_name_list2 = sorted(os.listdir(inputdir2))
 
 for patient_name in patient_name_list1:

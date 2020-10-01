@@ -7,11 +7,11 @@ start = time.time()
 ## 从DWI中根据已有的label mask出tumor
 ## 仅在tumor区域计算GLCM的特征
 
-inputdir1 = '/home/cjy/data/comp_pre/gc_match_to_first/meta'
-inputdir2 = '/home/cjy/data/comp_pre/gc_match_to_first/GBM'
+inputdir1 = '/home/cjy/data/comp_pre/fl_match_to_first/meta'
+inputdir2 = '/home/cjy/data/comp_pre/fl_match_to_first/GBM'
 
-outputdir1 = '/home/cjy/data/comp_pre/gc_match_to_first/tumor/meta'
-outputdir2 = '/home/cjy/data/comp_pre/gc_match_to_first/tumor/GBM'
+outputdir1 = '/home/cjy/data/comp_pre/fl_match_to_first/tumor/meta'
+outputdir2 = '/home/cjy/data/comp_pre/fl_match_to_first/tumor/GBM'
 
 patient_name_list1 = sorted(os.listdir(inputdir1))
 patient_name_list2 = sorted(os.listdir(inputdir2))
@@ -38,7 +38,7 @@ patient_name_list2 = sorted(os.listdir(inputdir2))
 #         os.mkdir(outputdir2 + '/' + patient_name)
 #     sitk.WriteImage(flairImage1, outputdir2 + '/' + patient_name + '/' + 'FLAIR.nii.gz')
 
-index = 4
+index = 3
 
 for patient_name in patient_name_list1:
     filedir1 = inputdir1 + '/' + patient_name

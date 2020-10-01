@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # data intensity histogram
+from utils.preprocess import grayCompression
 
 if __name__ == '__main__':
     count1 = np.zeros((45, 256))
@@ -13,8 +14,8 @@ if __name__ == '__main__':
     index = 4
     mod = ['label', 'DWI', 'T1+c', 'T2', 'T2-FLAIR', 'mask']
 
-    inputdir1 = '/home/cjy/data/comp_pre/gc_match_to_first/meta'
-    inputdir2 = '/home/cjy/data/comp_pre/gc_match_to_first/GBM'
+    inputdir1 = '/home/cjy/data/comp_pre/fl_match_to_first/meta'
+    inputdir2 = '/home/cjy/data/comp_pre/fl_match_to_first/GBM'
 
     patient_name_list1 = os.listdir(inputdir1)
     patient_name_list1 = sorted(patient_name_list1)
@@ -34,8 +35,8 @@ if __name__ == '__main__':
 
         sitkImage = sitk.ReadImage(inputdir1 + '/' + patient_name + '/' + file)
         sitkNp = sitk.GetArrayFromImage(sitkImage)
-        # sitkNp = grayCompression(sitkNp)
-        # sitkNp = sitkNp.astype(np.uint8)
+        sitkNp = grayCompression(sitkNp)
+        sitkNp = sitkNp.astype(np.uint8)
 
         # maskImage = sitk.ReadImage(inputdir1 + '/' + patient_name + '/' + mask)
         # maskNp = sitk.GetArrayFromImage(maskImage)
@@ -58,8 +59,8 @@ if __name__ == '__main__':
 
         sitkImage = sitk.ReadImage(inputdir2 + '/' + patient_name + '/' + file)
         sitkNp = sitk.GetArrayFromImage(sitkImage)
-        # sitkNp = grayCompression(sitkNp)
-        # sitkNp = sitkNp.astype(np.uint8)
+        sitkNp = grayCompression(sitkNp)
+        sitkNp = sitkNp.astype(np.uint8)
 
         # maskImage = sitk.ReadImage(inputdir2 + '/' + patient_name + '/' + mask)
         # maskNp = sitk.GetArrayFromImage(maskImage)
@@ -91,5 +92,5 @@ if __name__ == '__main__':
     for i in range(88):
         plt.plot(count[i, 1:])
 
-    plt.savefig('/home/cjy/data/comp_pre/gc_match_to_first/' + mod[index] + '.jpg')
+    plt.savefig('/home/cjy/data/comp_pre/fl_match_to_first/' + mod[index] + '.jpg')
     plt.show()

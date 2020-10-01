@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import skimage.feature
 
-from preprocess import crop, grayCompression
+from utils.preprocess import crop, grayCompression
 
 
 def neighbour_glcm(image, index):

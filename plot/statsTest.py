@@ -8,7 +8,7 @@ from scipy import stats
 # feature statistic analysis
 
 rootdir = '/home/cjy/data/comp_pre'
-fold = 'match_to_first'
+fold = 'fl_match_to_first'
 featuredir = 'tumor/feature'
 
 fdir = os.path.join(rootdir, fold, featuredir)

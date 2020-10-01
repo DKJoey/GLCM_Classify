@@ -4,7 +4,7 @@ import SimpleITK as sitk
 import numpy as np
 from PIL import Image
 
-from preprocess import crop, grayCompression
+from utils.preprocess import crop, grayCompression
 
 inputdir1 = '/home/cjy/data/data_final/meta_tumor'
 inputdir2 = '/home/cjy/data/data_final/GBM_tumor'

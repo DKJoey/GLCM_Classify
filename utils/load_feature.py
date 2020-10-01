@@ -17,10 +17,10 @@ def load_feature():
     X10 = np.load('feature/' + str + '/X_T2-FLAIR_transverse.npy')
     X11 = np.load('feature/' + str + '/X_T2-FLAIR_sagittal.npy')
     X12 = np.load('feature/' + str + '/X_T2-FLAIR_coronal.npy')
-    tumor_proportion = np.load('feature/volume_feature/tumor_proportion_feature.npy')
+    tumor_proportion = np.load('../feature/volume_feature/tumor_proportion_feature.npy')
 
-    sexage1 = np.load('meta_sex_age.npy')
-    sexage2 = np.load('gbm_sex_age.npy')
+    sexage1 = np.load('../meta_sex_age.npy')
+    sexage2 = np.load('../gbm_sex_age.npy')
     sexage = np.vstack((sexage1, sexage2))
     name = sexage[:, 0]
     name = name.reshape((88, 1))
@@ -34,14 +34,14 @@ def load_feature():
 
     X = np.hstack((X1, X2, X3, X4, X5, X6, X7, X8, X9,
                    X10, X11, X12, tumor_proportion))
-    y = np.load('feature/v6/y.npy')
+    y = np.load('../feature/v6/y.npy')
     y = y.ravel()
 
     return X, y, namesex
 
 
 def new_load_feature():
-    indir = '/home/cjy/data/comp_pre/match_to_first/tumor/feature'
+    indir = '/home/cjy/data/comp_pre/fl_match_to_first/tumor/feature'
 
     X1 = np.load(os.path.join(indir, 'DWI_transverse.npy'))
     X2 = np.load(os.path.join(indir, 'DWI_sagittal.npy'))
@@ -70,8 +70,21 @@ def new_load_feature():
     #
     # namesex = np.hstack((name, sex))
 
+    # all
     X = np.hstack((X1, X2, X3, X4, X5, X6, X7, X8, X9,
                    X10, X11, X12))
+
+    # transverse
+    # X = np.hstack((X1, X4, X7, X10))
+    # X = np.hstack((X2, X5, X8, X11))
+    # X = np.hstack((X3, X6, X9, X12))
+
+    # DWI
+    # X = np.hstack((X1, X2, X3))
+    # X = np.hstack((X4, X5, X6))
+    # X = np.hstack((X7, X8, X9))
+    # X = np.hstack((X10, X11, X12))
+
     y = np.load(os.path.join(indir, 'y.npy'))
     y = y.ravel()
 
@@ -79,5 +92,5 @@ def new_load_feature():
 
 
 if __name__ == '__main__':
-    sexage1 = np.load('meta_sex_age.npy')
-    sexage2 = np.load('gbm_sex_age.npy')
+    sexage1 = np.load('../meta_sex_age.npy')
+    sexage2 = np.load('../gbm_sex_age.npy')

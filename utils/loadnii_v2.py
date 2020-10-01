@@ -4,8 +4,8 @@ import time
 import SimpleITK as sitk
 import numpy as np
 
-from feature import glcm
-from preprocess import crop, grayCompression
+from utils.feature import glcm
+from utils.preprocess import crop, grayCompression
 
 start = time.time()
 
@@ -13,7 +13,7 @@ start = time.time()
 meta = np.ndarray((1, 16))
 gbm = np.ndarray((1, 16))
 
-indir = '/home/cjy/data/comp_pre/gc_match_to_first/tumor'
+indir = '/home/cjy/data/comp_pre/fl_match_to_first/tumor'
 
 inputdir1 = os.path.join(indir, 'meta')
 inputdir2 = os.path.join(indir, 'GBM')
@@ -24,9 +24,9 @@ patient_name_list2 = os.listdir(inputdir2)
 patient_name_list2 = sorted(patient_name_list2)
 
 index = 3
-# DWI: 0   T1: 1   T2: 2    T2-FLAIR: 3
+# DWI: 0  t1: 1   T2: 2   T2-FLAIR: 3
 slice_ori = 2
-# transverse : 0   sagittal: 1   coronal: 2
+# transverse :0    sagittal: 1   coronal: 2
 
 for patient_name in patient_name_list1:
     filedir1 = inputdir1 + '/' + patient_name
@@ -41,7 +41,6 @@ for patient_name in patient_name_list1:
     sitkNp = sitk.GetArrayFromImage(sitkImage)
     # 裁剪到一样大小
     sitkNp = crop(sitkNp, 123, 220, 220)
-
     sitkNp = grayCompression(sitkNp)
     sitkNp_int = sitkNp.astype(np.uint8)
 
