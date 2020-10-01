@@ -2,38 +2,28 @@ import time
 
 import numpy as np
 from sklearn import preprocessing
+from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split
 
-from utils.load_feature import load_feature
-from utils.mrmr import my_mRMR
+from utils.load_feature import new_load_feature
 
-X, y, namesex = load_feature()
+X, y, namesex = new_load_feature()
 
 results = np.zeros((1000, 4))
 
 name_results = {}
 
-# y = y.reshape((88, 1))
-# y = np.hstack((name, sex, y))
-# XB = np.hstack((X_B1cc,X_B1cs,X_B1ct))
-# yB = np.load('feature/BraTS/y.npy')
-# yB[yB == 0] = 1
-# X = np.vstack((X,XB))
-# y = np.vstack((y,yB))
-#
-# y[y==0] = -1
-#
 # 特征归一化
 # X, ranges, minval = autoNorm(X)
 X = preprocessing.scale(X)
 
 # pca降维
-# pca = PCA(n_components=20)
-# reduced_X = pca.fit_transform(X)
+pca = PCA(n_components=20)
+reduced_X = pca.fit_transform(X)
 
-reduced_X = my_mRMR(X, y, 20)
+# reduced_X = my_mRMR(X, y, 20)
 for i in range(1000):
     print(i)
     start = time.time()
@@ -85,6 +75,18 @@ print('%.3f +- %.3f' % (accmean, accstd))
 print('%.3f +- %.3f' % (f1mean, f1std))
 print('%.3f +- %.3f' % (runtimemean, runtimestd))
 
-# for key in name_results.keys():
-#     name_results[key] = mean(name_results[key])
-np.save('../whole_results/dict_LR.npy', name_results)
+for key in name_results.keys():
+    name_results[key] = np.mean(name_results[key])
+
+sexage1 = np.load('../meta_sex_age.npy')
+sexage2 = np.load('../gbm_sex_age.npy')
+sexage = np.vstack((sexage1, sexage2))
+sexage = np.hstack((sexage, np.zeros((88, 1))))
+
+for key in name_results.keys():
+    for i in range(88):
+        if sexage[i, 0] == key:
+            sexage[i, 3] = name_results[key]
+
+np.savetxt('../results/LR.csv', sexage, fmt='%s')
+np.save('../results/LR.npy', sexage)

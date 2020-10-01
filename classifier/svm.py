@@ -9,7 +9,7 @@ from sklearn.svm import SVC
 
 from utils.load_feature import new_load_feature
 
-X, y = new_load_feature()
+X, y, namesex = new_load_feature()
 
 results = np.zeros((1000, 2))
 
@@ -32,8 +32,8 @@ for i in range(1000):
     start = time.time()
 
     # 数据集划分
-    X_train, X_test, y_train, y_test = train_test_split(reduced_X, y, test_size=1 / 5,
-                                                        stratify=y)
+    X_train, X_test, y_train, y_test, _, namesex_test = train_test_split(reduced_X, y, namesex, test_size=1 / 5,
+                                                                         stratify=y)
     # grid search
     # y_train = y_train[:, 2]
     # y_test = y_test[:, 2]
@@ -46,13 +46,6 @@ for i in range(1000):
         classifier.fit(X_train, y_train)
         scores = cross_val_score(classifier, X_train, y_train, cv=10, scoring='f1')
         cv_scores.append(scores.mean())
-
-    # 通过图像选择最好的参数
-    # plt.plot(gamma_range, cv_scores, 'D-')
-    # plt.xlabel('gamma')
-    # plt.ylabel('f1')
-    # plt.semilogx()
-    # plt.show()
 
     index = cv_scores.index(max(cv_scores))
     g = gamma_range[index]
@@ -68,10 +61,10 @@ for i in range(1000):
     y_pred_proba = classifier.predict_proba(X_test)
     # params = classifier.get_params()
 
-    # for j in range(18):
-    #     if namesex_test[j, 0] not in name_results.keys():
-    #         name_results[namesex_test[j, 0]] = []
-    #     name_results[namesex_test[j, 0]].append(y_pred_proba[j, 1])
+    for j in range(18):
+        if namesex_test[j, 0] not in name_results.keys():
+            name_results[namesex_test[j, 0]] = []
+        name_results[namesex_test[j, 0]].append(y_pred_proba[j, 1])
 
     # 计算f1、accuracy
     f1 = f1_score(y_test, y_pred)
@@ -101,27 +94,18 @@ print('%.3f +- %.3f' % (accmean, accstd))
 print('%.3f +- %.3f' % (f1mean, f1std))
 # print('%.3f +- %.3f' % (runtimemean, runtimestd))
 
-# for key in name_results.keys():
-#     name_results[key] = mean(name_results[key])
+for key in name_results.keys():
+    name_results[key] = np.mean(name_results[key])
 
-# np.save('results/dict.npy', name_results)
+sexage1 = np.load('../meta_sex_age.npy')
+sexage2 = np.load('../gbm_sex_age.npy')
+sexage = np.vstack((sexage1, sexage2))
+sexage = np.hstack((sexage, np.zeros((88, 1))))
 
-# results = list(results)
-# results = sorted(results, key=lambda x: x[0])
-# results = np.asarray(results)
-# results = results[300:, :]
+for key in name_results.keys():
+    for i in range(88):
+        if sexage[i, 0] == key:
+            sexage[i, 3] = name_results[key]
 
-# s = 0
-# p = 0
-# f = 0
-# for i in range(1000):
-#     if results[i, 0] > 0.75:
-#         p += results[i, 0]
-#         f += results[i, 1]
-#         s += 1
-# p /= s
-# f /= s
-# print(p)
-# print(f)
-
-# np.savetxt('svm.csv',results)
+np.savetxt('../results/svm.csv', sexage, fmt='%s')
+np.save('../results/svm.npy', sexage)

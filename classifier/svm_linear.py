@@ -7,26 +7,16 @@ from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 
-from utils.load_feature import load_feature, new_load_feature
+from utils.load_feature import new_load_feature
 
-# X, y, namesex = load_feature()
+X, y, namesex = new_load_feature()
 
-X, y = new_load_feature()
+# X, y = new_load_feature()
 
 results = np.zeros((1000, 4))
 
 name_results = {}
 
-# y = y.reshape((88, 1))
-# y = np.hstack((name, sex, y))
-# XB = np.hstack((X_B1cc,X_B1cs,X_B1ct))
-# yB = np.load('feature/BraTS/y.npy')
-# yB[yB == 0] = 1
-# X = np.vstack((X,XB))
-# y = np.vstack((y,yB))
-#
-# y[y==0] = -1
-#
 # 特征归一化
 # X, ranges, minval = autoNorm(X)
 X = preprocessing.scale(X)
@@ -44,11 +34,8 @@ for i in range(1000):
     start = time.time()
 
     # 数据集划分
-    X_train, X_test, y_train, y_test = train_test_split(reduced_X, y, test_size=1 / 5,
-                                                        stratify=y)
-    # grid search
-    # y_train = y_train[:, 2]
-    # y_test = y_test[:, 2]
+    X_train, X_test, y_train, y_test, _, namesex_test = train_test_split(reduced_X, y, namesex, test_size=1 / 5,
+                                                                         stratify=y)
 
     classifier = SVC(kernel='linear', probability=True)
     classifier.fit(X_train, y_train)
@@ -60,10 +47,10 @@ for i in range(1000):
     y_pred_proba = classifier.predict_proba(X_test)
     # params = classifier.get_params()
 
-    # for j in range(18):
-    #     if namesex_test[j, 0] not in name_results.keys():
-    #         name_results[namesex_test[j, 0]] = []
-    #     name_results[namesex_test[j, 0]].append(y_pred_proba[j, 1])
+    for j in range(18):
+        if namesex_test[j, 0] not in name_results.keys():
+            name_results[namesex_test[j, 0]] = []
+        name_results[namesex_test[j, 0]].append(y_pred_proba[j, 1])
 
     # 计算f1、accuracy
     f1 = f1_score(y_test, y_pred)
@@ -90,6 +77,18 @@ print('%.3f +- %.3f' % (accmean, accstd))
 print('%.3f +- %.3f' % (f1mean, f1std))
 print('%.3f +- %.3f' % (runtimemean, runtimestd))
 
-# for key in name_results.keys():
-#     name_results[key] = mean(name_results[key])
-# np.save('../whole_results/dict_LinearSVC.npy', name_results)
+for key in name_results.keys():
+    name_results[key] = np.mean(name_results[key])
+
+sexage1 = np.load('../meta_sex_age.npy')
+sexage2 = np.load('../gbm_sex_age.npy')
+sexage = np.vstack((sexage1, sexage2))
+sexage = np.hstack((sexage, np.zeros((88, 1))))
+
+for key in name_results.keys():
+    for i in range(88):
+        if sexage[i, 0] == key:
+            sexage[i, 3] = name_results[key]
+
+np.savetxt('../results/linear.csv', sexage, fmt='%s')
+np.save('../results/linear.npy', sexage)

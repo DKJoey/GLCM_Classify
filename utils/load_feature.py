@@ -57,18 +57,18 @@ def new_load_feature():
     X12 = np.load(os.path.join(indir, 'T2-FLAIR_coronal.npy'))
     # tumor_proportion = np.load('feature/volume_feature/tumor_proportion_feature.npy')
 
-    # sexage1 = np.load('meta_sex_age.npy')
-    # sexage2 = np.load('gbm_sex_age.npy')
-    # sexage = np.vstack((sexage1, sexage2))
-    # name = sexage[:, 0]
-    # name = name.reshape((88, 1))
-    # sexage = sexage[:, 1:]
-    # sex = sexage[:, 0]
-    # sex = sex.reshape((88, 1))
-    # sexage = sexage.astype(np.int)
-    # sexage[:, 1] = sexage[:, 1] // 10
-    #
-    # namesex = np.hstack((name, sex))
+    sexage1 = np.load('../meta_sex_age.npy')
+    sexage2 = np.load('../gbm_sex_age.npy')
+    sexage = np.vstack((sexage1, sexage2))
+    name = sexage[:, 0]
+    name = name.reshape((88, 1))
+    sexage = sexage[:, 1:]
+    sex = sexage[:, 0]
+    sex = sex.reshape((88, 1))
+    sexage = sexage.astype(np.int)
+    sexage[:, 1] = sexage[:, 1] // 10
+
+    namesex = np.hstack((name, sex))
 
     # all
     X = np.hstack((X1, X2, X3, X4, X5, X6, X7, X8, X9,
@@ -88,7 +88,7 @@ def new_load_feature():
     y = np.load(os.path.join(indir, 'y.npy'))
     y = y.ravel()
 
-    return X, y
+    return X, y, namesex
 
 
 if __name__ == '__main__':
