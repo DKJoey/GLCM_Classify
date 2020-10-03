@@ -2,7 +2,6 @@ import time
 
 import numpy as np
 from sklearn import preprocessing
-from sklearn.decomposition import PCA
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.svm import SVC
@@ -20,12 +19,13 @@ name_results = {}
 X = preprocessing.scale(X)
 
 # pca降维
-pca = PCA(n_components=20)
-reduced_X = pca.fit_transform(X)
+# pca = PCA(n_components=20)
+# reduced_X = pca.fit_transform(X)
 
 # mrmr降维
 # reduced_X = my_mRMR(X, y, 20)
-# reduced_X = X
+
+reduced_X = X
 
 for i in range(1000):
     print(i)

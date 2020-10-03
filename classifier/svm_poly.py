@@ -11,6 +11,8 @@ from utils.load_feature import new_load_feature
 
 X, y, namesex = new_load_feature()
 
+degree = 2
+
 results = np.zeros((1000, 4))
 
 name_results = {}
@@ -27,7 +29,6 @@ reduced_X = pca.fit_transform(X)
 # mrmr降维
 # reduced_X = my_mRMR(X, y, 20)
 
-degree = 2
 for i in range(1000):
     print(i)
 
@@ -104,5 +105,5 @@ for key in name_results.keys():
         if sexage[i, 0] == key:
             sexage[i, 3] = name_results[key]
 
-np.savetxt('../results/poly2.csv', sexage, fmt='%s')
-np.save('../results/poly2.npy', sexage)
+np.savetxt('../results/poly' + str(degree) + '.csv', sexage, fmt='%s')
+np.save('../results/poly' + str(degree) + '.npy', sexage)
