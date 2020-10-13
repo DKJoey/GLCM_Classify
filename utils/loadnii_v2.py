@@ -13,7 +13,7 @@ start = time.time()
 meta = np.ndarray((1, 16))
 gbm = np.ndarray((1, 16))
 
-indir = '/home/cjy/data/comp_pre/fl_match_to_first/tumor'
+indir = '/home/cjy/data/10.11/match2'
 
 inputdir1 = os.path.join(indir, 'meta')
 inputdir2 = os.path.join(indir, 'GBM')
@@ -23,8 +23,8 @@ patient_name_list1 = sorted(patient_name_list1)
 patient_name_list2 = os.listdir(inputdir2)
 patient_name_list2 = sorted(patient_name_list2)
 
-index = 3
-# DWI: 0  t1: 1   T2: 2   T2-FLAIR: 3
+index = 4
+# # label = 0   DWI: 1   t1: 2    T2: 3   T2-FLAIR: 4
 slice_ori = 2
 # transverse :0    sagittal: 1   coronal: 2
 
@@ -35,7 +35,12 @@ for patient_name in patient_name_list1:
     # print(filelist1)
     file = filelist1[index]
     ##取数据
-    print(file)
+    label = filelist1[0]
+    print(file, label)
+
+    labelImage = sitk.ReadImage(inputdir1 + '/' + patient_name + '/' + label)
+    labelNp = sitk.GetArrayFromImage(labelImage)
+    labelNp = crop(labelNp, 123, 220, 220)
 
     sitkImage = sitk.ReadImage(inputdir1 + '/' + patient_name + '/' + file)
     sitkNp = sitk.GetArrayFromImage(sitkImage)
@@ -43,6 +48,9 @@ for patient_name in patient_name_list1:
     sitkNp = crop(sitkNp, 123, 220, 220)
     sitkNp = grayCompression(sitkNp)
     sitkNp_int = sitkNp.astype(np.uint8)
+
+    # mask roi
+    sitkNp_int[labelNp == 0] = 0
 
     # sitkNp_int=sitkNp
     # ----------test 2D glcm
@@ -83,14 +91,21 @@ for patient_name in patient_name_list2:
     file = filelist2[index]
     print(file)
 
+    label = filelist2[0]
+    print(file, label)
+
+    labelImage = sitk.ReadImage(inputdir2 + '/' + patient_name + '/' + label)
+    labelNp = sitk.GetArrayFromImage(labelImage)
+    labelNp = crop(labelNp, 123, 220, 220)
+
     sitkImage = sitk.ReadImage(inputdir2 + '/' + patient_name + '/' + file)
     sitkNp = sitk.GetArrayFromImage(sitkImage)
-    sitkNp = crop(sitkNp, 123, 220, 220)
 
-    #
+    sitkNp = crop(sitkNp, 123, 220, 220)
     sitkNp = grayCompression(sitkNp)
     sitkNp_int = sitkNp.astype(np.uint8)
 
+    sitkNp_int[labelNp == 0] = 0
     # sitkNp_int = sitkNp
     # ----------test 2D glcm
     # feature dummyhead
@@ -131,8 +146,8 @@ y = np.vstack((meta_label, gbm_label))
 # DWI: 0   T1: 1   T2: 2    T2-FLAIR: 3
 # transverse : 0   sagittal: 1   coronal: 2
 
-mod = ['DWI', 'T1+c', 'T2', 'T2-FLAIR']
-# mod = ['label', 'DWI', 'T1+c', 'T2', 'T2-FLAIR']
+# mod = ['DWI', 'T1+c', 'T2', 'T2-FLAIR']
+mod = ['label', 'DWI', 'T1+c', 'T2', 'T2-FLAIR']
 slice_oris = ['transverse', 'sagittal', 'coronal']
 
 print(mod[index])

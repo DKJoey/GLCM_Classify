@@ -3,14 +3,13 @@ import time
 import numpy as np
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
-from sklearn.metrics import f1_score, accuracy_score, classification_report
 from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC
 
 from utils.load_feature import new_load_feature
 
-X, y = new_load_feature()
+X, y, _ = new_load_feature()
 
 # 特征归一化
 # X, ranges, minval = autoNorm(X)

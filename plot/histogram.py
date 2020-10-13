@@ -11,11 +11,14 @@ if __name__ == '__main__':
     count1 = np.zeros((45, 256))
     count2 = np.zeros((43, 256))
     #
-    index = 4
+    index = 1
     mod = ['label', 'DWI', 'T1+c', 'T2', 'T2-FLAIR', 'mask']
 
-    inputdir1 = '/home/cjy/data/comp_pre/fl_match_to_first/meta'
-    inputdir2 = '/home/cjy/data/comp_pre/fl_match_to_first/GBM'
+    rootdir = '/home/cjy/data/10.11'
+    fold = 'match2'
+
+    inputdir1 = os.path.join(rootdir, fold, 'meta')
+    inputdir2 = os.path.join(rootdir, fold, 'GBM')
 
     patient_name_list1 = os.listdir(inputdir1)
     patient_name_list1 = sorted(patient_name_list1)
@@ -92,5 +95,5 @@ if __name__ == '__main__':
     for i in range(88):
         plt.plot(count[i, 1:])
 
-    plt.savefig('/home/cjy/data/comp_pre/fl_match_to_first/' + mod[index] + '.jpg')
+    plt.savefig(os.path.join(rootdir, fold, mod[index] + '.jpg'))
     plt.show()

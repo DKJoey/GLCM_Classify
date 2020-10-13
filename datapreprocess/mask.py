@@ -10,8 +10,8 @@ start = time.time()
 inputdir1 = '/home/cjy/data/comp_pre/fl_match_to_first/meta'
 inputdir2 = '/home/cjy/data/comp_pre/fl_match_to_first/GBM'
 
-outputdir1 = '/home/cjy/data/comp_pre/fl_match_to_first/tumor/meta'
-outputdir2 = '/home/cjy/data/comp_pre/fl_match_to_first/tumor/GBM'
+outputdir1 = '/home/cjy/data/comp_pre/fl_match_to_first/meta'
+outputdir2 = '/home/cjy/data/comp_pre/fl_match_to_first/GBM'
 
 patient_name_list1 = sorted(os.listdir(inputdir1))
 patient_name_list2 = sorted(os.listdir(inputdir2))
@@ -38,13 +38,12 @@ patient_name_list2 = sorted(os.listdir(inputdir2))
 #         os.mkdir(outputdir2 + '/' + patient_name)
 #     sitk.WriteImage(flairImage1, outputdir2 + '/' + patient_name + '/' + 'FLAIR.nii.gz')
 
-index = 3
+index = 0
 
 for patient_name in patient_name_list1:
     filedir1 = inputdir1 + '/' + patient_name
     filelist1 = sorted(os.listdir(filedir1))
     # print(filelist1)
-
     dwi = filelist1[index]  ##取 DWI 数据
     print(dwi)
     label = filelist1[0]  ##取 label 数据
@@ -59,7 +58,9 @@ for patient_name in patient_name_list1:
     # dwiNp[dwiNp < 0] = 0
 
     dwiNp[labelNp == 0] = 0  # tumor
+    # dwiNp[labelNp > 3 ] = 3  # tumor
     # dwiNp[labelNp != 0] = 0  #normal
+
 
     dwiImage1 = sitk.GetImageFromArray(dwiNp)
     dwiImage1.CopyInformation(dwiImage)
@@ -86,6 +87,7 @@ for patient_name in patient_name_list2:
     # dwiNp[dwiNp < 0] = 0
 
     dwiNp[labelNp == 0] = 0  # tumor
+    # dwiNp[labelNp > 3 ] = 3  # tumor
     # dwiNp[labelNp != 0] = 0  #normal
 
     dwiImage1 = sitk.GetImageFromArray(dwiNp)

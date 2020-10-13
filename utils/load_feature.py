@@ -41,7 +41,7 @@ def load_feature():
 
 
 def new_load_feature():
-    indir = '/home/cjy/data/comp_pre/fl_match_to_first/tumor/feature'
+    indir = '/home/cjy/data/10.11/match/feature'
 
     X1 = np.load(os.path.join(indir, 'DWI_transverse.npy'))
     X2 = np.load(os.path.join(indir, 'DWI_sagittal.npy'))
@@ -55,6 +55,9 @@ def new_load_feature():
     X10 = np.load(os.path.join(indir, 'T2-FLAIR_transverse.npy'))
     X11 = np.load(os.path.join(indir, 'T2-FLAIR_sagittal.npy'))
     X12 = np.load(os.path.join(indir, 'T2-FLAIR_coronal.npy'))
+    X13 = np.load(os.path.join(indir, 'label_transverse.npy'))
+    X14 = np.load(os.path.join(indir, 'label_sagittal.npy'))
+    X15 = np.load(os.path.join(indir, 'label_coronal.npy'))
     # tumor_proportion = np.load('feature/volume_feature/tumor_proportion_feature.npy')
 
     sexage1 = np.load('../meta_sex_age.npy')
@@ -72,7 +75,9 @@ def new_load_feature():
 
     # all
     X = np.hstack((X1, X2, X3, X4, X5, X6, X7, X8, X9,
-                   X10, X11, X12))
+                   X10, X11, X12, X13, X14, X15))
+    # X = np.hstack((X1, X2, X3, X4, X5, X6, X7, X8, X9,
+    #                X10, X11, X12))
 
     # transverse
     # X = np.hstack((X1, X4, X7, X10))
@@ -84,6 +89,7 @@ def new_load_feature():
     # X = np.hstack((X4, X5, X6))
     # X = np.hstack((X7, X8, X9))
     # X = np.hstack((X10, X11, X12))
+    # X = np.hstack((X13, X14, X15))
 
     y = np.load(os.path.join(indir, 'y.npy'))
     y = y.ravel()
