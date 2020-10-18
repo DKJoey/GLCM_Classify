@@ -2,16 +2,16 @@ import time
 
 import numpy as np
 from sklearn import preprocessing
-from sklearn.decomposition import PCA
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.svm import SVC
 
+from utils.feature import feature_select
 from utils.load_feature import new_load_feature
 
 X, y, namesex = new_load_feature()
 
-degree = 2
+degree = 4
 
 results = np.zeros((1000, 4))
 
@@ -22,12 +22,7 @@ name_results = {}
 # X, ranges, minval = autoNorm(X)
 X = preprocessing.scale(X)
 
-# pca降维
-pca = PCA(n_components=20)
-reduced_X = pca.fit_transform(X)
-
-# mrmr降维
-# reduced_X = my_mRMR(X, y, 20)
+reduced_X = feature_select(X, y, 20, 'rank')
 
 for i in range(1000):
     print(i)

@@ -10,8 +10,8 @@ start = time.time()
 inputdir1 = '/home/cjy/data/comp_pre/fl_match_to_first/meta'
 inputdir2 = '/home/cjy/data/comp_pre/fl_match_to_first/GBM'
 
-outputdir1 = '/home/cjy/data/comp_pre/fl_match_to_first/meta'
-outputdir2 = '/home/cjy/data/comp_pre/fl_match_to_first/GBM'
+outputdir1 = '/home/cjy/data/comp_pre/fl_match_to_first/tumor/meta'
+outputdir2 = '/home/cjy/data/comp_pre/fl_match_to_first/tumor/GBM'
 
 patient_name_list1 = sorted(os.listdir(inputdir1))
 patient_name_list2 = sorted(os.listdir(inputdir2))
@@ -38,7 +38,7 @@ patient_name_list2 = sorted(os.listdir(inputdir2))
 #         os.mkdir(outputdir2 + '/' + patient_name)
 #     sitk.WriteImage(flairImage1, outputdir2 + '/' + patient_name + '/' + 'FLAIR.nii.gz')
 
-index = 0
+index = 4
 
 for patient_name in patient_name_list1:
     filedir1 = inputdir1 + '/' + patient_name

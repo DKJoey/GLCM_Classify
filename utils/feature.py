@@ -1,8 +1,12 @@
 import numpy as np
+import pandas as pd
+import pymrmr
 import skimage.feature
-
-
 # 灰度共生矩阵
+from scipy import stats
+from sklearn.decomposition import PCA
+
+
 def glcm(image):
     g = skimage.feature.greycomatrix(image, [1], [0, np.pi / 4, np.pi / 2, 3 * np.pi / 4])
     # 对比度
@@ -53,9 +57,77 @@ def tumor_proportion_feature():
     np.save('../feature/volume_feature/tumor_proportion_feature.npy', ans)
 
 
+def feature_select(X, y, n, kind):
+    if kind == 'PCA':
+        pca = PCA(n_components=n)
+        ans = pca.fit_transform(X)
+    elif kind == 'mRMR MIQ':
+        ans = my_mRMR(X, y, n, 'MIQ')
+    elif kind == 'mRMR MID':
+        ans = my_mRMR(X, y, n, 'MID')
+    elif kind == 'rank':
+        rank = feature_ranked(X)
+        res = []
+        for i in range(X.shape[1]):
+            if rank[0, i] < n:
+                res.append(i)
+        ans = X[:, res]
+        print(ans.shape)
+    else:
+        print('feature selection kind error')
+
+    return ans
+
+
+def my_mRMR(X, y, n, kind):
+    y = y.reshape((88, 1))
+    data = np.hstack((y, X))
+
+    c = ['f' + str(i) for i in range(X.shape[1] + 1)]
+
+    frame = pd.DataFrame(data, columns=c)
+
+    if kind == 'MIQ':
+        result = pymrmr.mRMR(frame, "MIQ", n)
+        # MAX/MIN
+    elif kind == 'MID':
+        result = pymrmr.mRMR(frame, "MID", n)
+        # MAX-MIN
+    else:
+        print('mRMR kind error')
+        return
+
+    ans = []
+    for r in result:
+        r = int(r[1:]) - 1
+        ans.append(r)
+
+    Xse = np.zeros((X.shape[0], n))
+    j = 0
+    for i in ans:
+        Xse[:, j] = X[:, i]
+        j += 1
+
+    return Xse
+
+
+def feature_ranked(X):
+    rank = np.zeros((1, X.shape[1]))
+    for i in range(X.shape[1]):
+        # group a: meta
+        a = X[0:45, i]
+        # group b : gbm
+        b = X[45:88, i]
+        # plot data feature distribution between groups
+        u, pvalue = stats.mannwhitneyu(a, b, alternative='two-sided')
+        rank[0, i] = pvalue
+    prank = np.argsort(rank)
+    return prank
+
+
 if __name__ == '__main__':
     # a= np.loadtxt('volumecount_gbm.csv')
-    tumor_proportion_feature()
+    # tumor_proportion_feature()
     pass
     # inputdir1 = '/home/cjy/data/data_final/meta_bg0'
     # inputdir2 = '/home/cjy/data/data_final/GBM_bg0'

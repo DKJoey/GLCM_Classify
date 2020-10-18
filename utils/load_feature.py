@@ -74,10 +74,10 @@ def new_load_feature():
     namesex = np.hstack((name, sex))
 
     # all
-    X = np.hstack((X1, X2, X3, X4, X5, X6, X7, X8, X9,
-                   X10, X11, X12, X13, X14, X15))
     # X = np.hstack((X1, X2, X3, X4, X5, X6, X7, X8, X9,
-    #                X10, X11, X12))
+    #                X10, X11, X12, X13, X14, X15))
+    X = np.hstack((X1, X2, X3, X4, X5, X6, X7, X8, X9,
+                   X10, X11, X12, sexage))
 
     # transverse
     # X = np.hstack((X1, X4, X7, X10))

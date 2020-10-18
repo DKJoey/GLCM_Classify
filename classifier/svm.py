@@ -6,6 +6,7 @@ from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.svm import SVC
 
+from utils.feature import feature_select
 from utils.load_feature import new_load_feature
 
 X, y, namesex = new_load_feature()
@@ -18,14 +19,7 @@ name_results = {}
 # X, ranges, minval = autoNorm(X)
 X = preprocessing.scale(X)
 
-# pca降维
-# pca = PCA(n_components=20)
-# reduced_X = pca.fit_transform(X)
-
-# mrmr降维
-# reduced_X = my_mRMR(X, y, 20)
-
-reduced_X = X
+reduced_X = feature_select(X, y, 20, 'rank')
 
 for i in range(1000):
     print(i)
@@ -38,7 +32,7 @@ for i in range(1000):
     # y_train = y_train[:, 2]
     # y_test = y_test[:, 2]
 
-    gamma_range = [5e-4, 1e-3, 5e-3, 0.01, 0.05, 0.1, 0.5, 1, 5]
+    gamma_range = [10 ** c for c in range(-5, 5)]
 
     cv_scores = []
     for g in gamma_range:

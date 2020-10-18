@@ -2,11 +2,11 @@ import time
 
 import numpy as np
 from sklearn import preprocessing
-from sklearn.decomposition import PCA
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC
 
+from utils.feature import feature_select
 from utils.load_feature import new_load_feature
 
 X, y, _ = new_load_feature()
@@ -16,13 +16,7 @@ X, y, _ = new_load_feature()
 X = preprocessing.scale(X)
 
 # pca降维
-pca = PCA(n_components=20)
-reduced_X = pca.fit_transform(X)
-
-# mrmr降维
-# reduced_X = my_mRMR(X, y, 20)
-# reduced_X = X
-
+reduced_X = feature_select(X, y, 20, 'rank')
 start = time.time()
 
 # grid search
