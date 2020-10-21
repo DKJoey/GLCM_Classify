@@ -50,34 +50,36 @@ def result_auc(result):
     return prob, fpr, tpr, auc
 
 
+plt.rc('font', family='Times New Roman')
+
 prob2, fpr, tpr, auc = result_auc(result2)
-plt.plot(fpr, tpr, label='kNN:            AUC={0:0.4f}'.format(auc))
+plt.plot(fpr, tpr, label='kNN:             AUC={0:0.4f}'.format(auc))
 #
 prob4, fpr, tpr, auc = result_auc(result4)
-plt.plot(fpr, tpr, label='LR:               AUC={0:0.4f}'.format(auc))
+plt.plot(fpr, tpr, label='LR:                AUC={0:0.4f}'.format(auc))
 
 prob3, fpr, tpr, auc = result_auc(result3)
 plt.plot(fpr, tpr, label='SVM-Linear: AUC={0:0.4f}'.format(auc))
 #
 prob5, fpr, tpr, auc = result_auc(result5)
-plt.plot(fpr, tpr, label='SVM-poly2:  AUC={0:0.4f}'.format(auc))
+plt.plot(fpr, tpr, label='SVM-Poly2:  AUC={0:0.4f}'.format(auc))
 #
 prob6, fpr, tpr, auc = result_auc(result6)
-plt.plot(fpr, tpr, label='SVM-poly3:  AUC={0:0.4f}'.format(auc))
+plt.plot(fpr, tpr, label='SVM-Poly3:  AUC={0:0.4f}'.format(auc))
 #
 prob7, fpr, tpr, auc = result_auc(result7)
-plt.plot(fpr, tpr, label='SVM-poly4:  AUC={0:0.4f}'.format(auc))
+plt.plot(fpr, tpr, label='SVM-Poly4:  AUC={0:0.4f}'.format(auc))
 
 prob1, fpr, tpr, auc = result_auc(result1)
-plt.plot(fpr, tpr, label='SVM-RBF:    AUC={0:0.4f}'.format(auc))
+plt.plot(fpr, tpr, label='SVM-RBF:   AUC={0:0.4f}'.format(auc))
 
-plt.xlabel('1-Specificity')
-plt.ylabel('Sensitivity')
+plt.xlabel('1-Specificity', fontsize=15)
+plt.ylabel('Sensitivity', fontsize=15)
 plt.ylim([0.0, 1.05])
 plt.xlim([-0.02, 1.0])
 # plt.grid(True)
-plt.title('ROC')
-plt.legend(loc="lower right")
+plt.title('ROC', fontsize=15)
+plt.legend(loc="lower right", fontsize=14)
 plt.savefig('results/auc.jpg')
 plt.show()
 

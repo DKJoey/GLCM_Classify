@@ -40,7 +40,7 @@ f_list = os.listdir(dir)
 f_list = sorted(f_list)
 
 label = f_list[0]
-file = f_list[1]
+file = f_list[4]
 # 0：label    1:DWI    2:t1    3:t2    4:flair    5:mask
 
 slice_ori = 2
@@ -59,16 +59,21 @@ sitkNp = grayCompression(sitkNp)
 sitkNp_int = sitkNp.astype(np.uint8)
 
 # mask roi
+b_sitkNp_int = sitkNp_int.copy()
 sitkNp_int[labelNp == 0] = 0
+
 
 feature = np.zeros((1, 16))
 for i in range(sitkNp_int.shape[slice_ori]):
     if slice_ori == 0:
         image = sitkNp_int[i, :, :]
+        b_image = b_sitkNp_int[i, :, :]
     elif slice_ori == 1:
         image = sitkNp_int[:, i, :]
+        b_image = b_sitkNp_int[:, i, :]
     elif slice_ori == 2:
         image = sitkNp_int[:, :, i]
+        b_image = b_sitkNp_int[:, :, i]
     else:
         print("slice_ori error")
         break
@@ -80,11 +85,25 @@ for i in range(sitkNp_int.shape[slice_ori]):
 
     if not os.path.exists(os.path.join(odir, str(slice_ori), str(i))):
         os.makedirs(os.path.join(odir, str(slice_ori), str(i)))
+
     plt.imshow(image, cmap='jet')
+    plt.xticks([])
+    plt.yticks([])
+    plt.savefig(os.path.join(odir, str(slice_ori), str(i), 'tumor_color.jpg'))
+    plt.show()
+
+    plt.imshow(image, cmap='bone')
     plt.xticks([])
     plt.yticks([])
     plt.savefig(os.path.join(odir, str(slice_ori), str(i), 'tumor.jpg'))
     plt.show()
+
+    plt.imshow(b_image, cmap='bone')
+    plt.xticks([])
+    plt.yticks([])
+    plt.savefig(os.path.join(odir, str(slice_ori), str(i), 'brain.jpg'))
+    plt.show()
+
     g = skimage.feature.greycomatrix(image, [1], [0, np.pi / 4, np.pi / 2, 3 * np.pi / 4])
     # print(g.shape)
 

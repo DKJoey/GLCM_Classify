@@ -42,3 +42,10 @@ if __name__ == '__main__':
 
     np.savetxt(os.path.join(fdir, 'stats', 'p_result.csv'), p_result)
     np.save(os.path.join(fdir, 'stats', 'p_result.npy'), p_result)
+
+    # ---------------------------------------
+    # roc result t test
+    # a = [84.73, 91.52, 93.23, 72.92, 82.58, 71.14, 87.08]
+    # b = [86.64, 93.64, 83.28, 68.22, 85.22, 68.48, 89.15]
+    #
+    # t, p = stats.ttest_rel(a, b)
