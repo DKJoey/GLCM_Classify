@@ -76,8 +76,8 @@ def new_load_feature():
     # all
     # X = np.hstack((X1, X2, X3, X4, X5, X6, X7, X8, X9,
     #                X10, X11, X12))
-    X = np.hstack((X1, X2, X3, X4, X5, X6, X7, X8, X9,
-                   X10, X11, X12, sexage))
+    # X = np.hstack((X1, X2, X3, X4, X5, X6, X7, X8, X9,
+    #                X10, X11, X12, sexage))
 
     # transverse
     # X = np.hstack((X1, X4, X7, X10))
@@ -87,7 +87,7 @@ def new_load_feature():
     # DWI
     # X = np.hstack((X1, X2, X3))
     # X = np.hstack((X4, X5, X6))
-    # X = np.hstack((X7, X8, X9))
+    X = np.hstack((X7, X8, X9))
     # X = np.hstack((X10, X11, X12))
     # X = np.hstack((X13, X14, X15))
 

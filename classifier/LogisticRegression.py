@@ -19,7 +19,7 @@ name_results = {}
 # X, ranges, minval = autoNorm(X)
 X = preprocessing.scale(X)
 
-reduced_X = feature_select(X, y, 20, 'rank')
+reduced_X = feature_select(X, y, 20, 'PCA')
 for i in range(1000):
     print(i)
     start = time.time()

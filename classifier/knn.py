@@ -20,7 +20,7 @@ name_results = {}
 X = preprocessing.scale(X)
 
 # pca降维
-reduced_X = feature_select(X, y, 20, 'rank')
+reduced_X = feature_select(X, y, 20, 'PCA')
 
 for i in range(1000):
     print(i)

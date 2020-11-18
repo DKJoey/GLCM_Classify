@@ -12,7 +12,6 @@ from utils.load_feature import new_load_feature
 X, y, namesex = new_load_feature()
 
 degree = 4
-
 results = np.zeros((1000, 6))
 
 name_results = {}
@@ -22,7 +21,7 @@ name_results = {}
 # X, ranges, minval = autoNorm(X)
 X = preprocessing.scale(X)
 
-reduced_X = feature_select(X, y, 20, 'rank')
+reduced_X = feature_select(X, y, 20, 'PCA')
 
 for i in range(1000):
     print(i)
@@ -41,7 +40,6 @@ for i in range(1000):
         classifier.fit(X_train, y_train)
         scores = cross_val_score(classifier, X_train, y_train, cv=5, scoring='f1')
         cv_scores.append(scores.mean())
-
 
     index = cv_scores.index(max(cv_scores))
     g = gamma_range[index]
